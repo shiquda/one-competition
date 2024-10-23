@@ -6,6 +6,7 @@
   <nav class="navigator">
     <ul>
       <HeaderButton title="首页" to="/"></HeaderButton>
+      <HeaderButton title="投稿" to="/submit"></HeaderButton>
       <HeaderButton title="关于" to="/about"></HeaderButton>
     </ul>
   </nav>
