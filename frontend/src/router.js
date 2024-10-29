@@ -3,6 +3,7 @@ import About from '@/views/About.vue';
 import Submit from '@/views/Submit.vue';
 import Home from '@/views/Home.vue';
 import CompetitionDetail from '@/views/CompetitionDetail.vue';
+import NotFound from '@/views/NotFound.vue';
 
 const routes = [
     {
@@ -28,6 +29,11 @@ const routes = [
     {
         path: '/index.html',
         redirect: '/'
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: NotFound
     }
 ];
 
