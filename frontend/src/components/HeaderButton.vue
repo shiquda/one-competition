@@ -1,6 +1,9 @@
 <template>
   <li>
-    <router-link :to="to" class="header-button">{{ title }}</router-link>
+    <router-link :to="to" class="header-button">
+      <i :class="awesomeIcon"></i>
+      {{ title }}
+    </router-link>
   </li>
 </template>
 
@@ -9,6 +12,7 @@
   defineProps({
     title: String,
     to: String,
+    awesomeIcon: String,
   });
 </script>
 

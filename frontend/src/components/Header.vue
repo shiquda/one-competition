@@ -16,8 +16,16 @@
           <span class="logo-text">One 竞赛</span>
         </router-link>
       </div>
-      <HeaderButton title="投稿" to="/submit"></HeaderButton>
-      <HeaderButton title="关于" to="/about"></HeaderButton>
+      <HeaderButton
+        title="投稿"
+        to="/submit"
+        awesomeIcon="fa-solid fa-pen"
+      ></HeaderButton>
+      <HeaderButton
+        title="关于"
+        to="/about"
+        awesomeIcon="fa-solid fa-circle-info"
+      ></HeaderButton>
     </ul>
   </nav>
   <div class="navigator-placeholder"></div>
