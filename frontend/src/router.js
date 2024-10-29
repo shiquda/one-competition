@@ -1,12 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import About from '@/views/About.vue';
 import Submit from '@/views/Submit.vue';
+import Home from '@/views/Home.vue';
+import CompetitionDetail from '@/views/CompetitionDetail.vue';
 
 const routes = [
     {
         path: '/',
-        name: 'About',
-        component: About
+        name: 'Home',
+        component: Home
     },
     {
         path: '/about',
@@ -17,6 +19,11 @@ const routes = [
         path: '/submit',
         name: 'Submit',
         component: Submit
+    },
+    {
+        path: '/competition/:id',
+        name: 'CompetitionDetail',
+        component: CompetitionDetail
     },
     {
         path: '/index.html',
