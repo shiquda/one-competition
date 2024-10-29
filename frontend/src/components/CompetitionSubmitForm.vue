@@ -4,33 +4,202 @@
   <form>
     <div class="form-container">
       <label for="title">竞赛名称</label>
-      <input type="text" id="title" />
+      <div class="input-container">
+        <span class="error" v-if="errors.title">{{ errors.title }}</span>
+        <input type="text" id="title" v-model="title" @input="validateTitle" />
+      </div>
+
       <label for="description">竞赛描述</label>
-      <textarea id="description"></textarea>
+      <div class="input-container">
+        <span class="error" v-if="errors.description">{{
+          errors.description
+        }}</span>
+        <textarea
+          id="description"
+          v-model="description"
+          @input="validateDescription"
+        ></textarea>
+      </div>
+
       <label for="url">竞赛官网</label>
-      <input type="text" id="url" />
+      <div class="input-container">
+        <span class="error" v-if="errors.url">{{ errors.url }}</span>
+        <input type="text" id="url" v-model="url" @input="validateUrl" />
+      </div>
+
       <label for="deadline">报名日期</label>
       <div class="date-container">
         <span>报名开始</span>
-        <input type="date" id="register-start" />
+        <span class="error" v-if="errors.registerStart">{{
+          errors.registerStart
+        }}</span>
+        <input
+          type="date"
+          id="register-start"
+          v-model="registerStart"
+          @input="validateRegisterStart"
+        />
+
         <span>报名结束</span>
-        <input type="date" id="register-end" />
+        <span class="error" v-if="errors.registerEnd">{{
+          errors.registerEnd
+        }}</span>
+        <input
+          type="date"
+          id="register-end"
+          v-model="registerEnd"
+          @input="validateRegisterEnd"
+        />
       </div>
       <label for="deadline">比赛日期</label>
       <div class="date-container">
         <span>比赛开始</span>
-        <input type="date" id="competition-start" />
+        <span class="error" v-if="errors.competitionStart">{{
+          errors.competitionStart
+        }}</span>
+        <input
+          type="date"
+          id="competition-start"
+          v-model="competitionStart"
+          @input="validateCompetitionStart"
+        />
+
         <span>比赛结束</span>
-        <input type="date" id="competition-end" />
+        <span class="error" v-if="errors.competitionEnd">{{
+          errors.competitionEnd
+        }}</span>
+        <input
+          type="date"
+          id="competition-end"
+          v-model="competitionEnd"
+          @input="validateCompetitionEnd"
+        />
       </div>
       <label for="other-info">其他备注</label>
-      <textarea id="other-info"></textarea>
+      <textarea id="other-info" v-model="otherInfo"></textarea>
     </div>
-    <button type="submit">提交</button>
+    <button type="submit" @click.prevent="submitForm" :disabled="hasErrors">
+      提交
+    </button>
   </form>
 </template>
 
-<script setup></script>
+<script setup>
+  import { ref, computed, onMounted } from 'vue';
+  import showNotification from '@/utils/showNotification';
+
+  const title = ref('');
+  const description = ref('');
+  const url = ref('');
+  const registerStart = ref('');
+  const registerEnd = ref('');
+  const competitionStart = ref('');
+  const competitionEnd = ref('');
+  const otherInfo = ref('');
+
+  const errors = ref({
+    title: '',
+    description: '',
+    url: '',
+    registerStart: '',
+    registerEnd: '',
+    competitionStart: '',
+    competitionEnd: '',
+  });
+
+  const hasErrors = computed(() => {
+    return Object.values(errors.value).some(error => error);
+  });
+
+  onMounted(() => {
+    validateTitle();
+    validateDescription();
+    validateUrl();
+    validateRegisterStart();
+    validateRegisterEnd();
+    validateCompetitionStart();
+    validateCompetitionEnd();
+  });
+
+  const validateTitle = () => {
+    if (!title.value) {
+      errors.value.title = '请输入竞赛名称';
+    } else {
+      errors.value.title = '';
+    }
+  };
+
+  const validateDescription = () => {
+    if (!description.value) {
+      errors.value.description = '请输入竞赛描述';
+    } else {
+      errors.value.description = '';
+    }
+  };
+
+  const validateUrl = () => {
+    if (url.value && !/^https?:\/\//.test(url.value)) {
+      errors.value.url = '请输入正确的网址';
+    } else {
+      errors.value.url = '';
+    }
+  };
+
+  const validateRegisterStart = () => {
+    if (!registerStart.value) {
+      errors.value.registerStart = '请选择报名开始日期';
+    } else {
+      errors.value.registerStart = '';
+    }
+  };
+
+  const validateRegisterEnd = () => {
+    if (!registerEnd.value) {
+      errors.value.registerEnd = '请选择报名结束日期';
+    } else {
+      errors.value.registerEnd = '';
+    }
+  };
+
+  const validateCompetitionStart = () => {
+    if (!competitionStart.value) {
+      errors.value.competitionStart = '请选择比赛开始日期';
+    } else {
+      errors.value.competitionStart = '';
+    }
+  };
+
+  const validateCompetitionEnd = () => {
+    if (!competitionEnd.value) {
+      errors.value.competitionEnd = '请选择比赛结束日期';
+    } else {
+      errors.value.competitionEnd = '';
+    }
+  };
+
+  const submitForm = () => {
+    // 如果没有错误,则提交表单
+    if (!hasErrors.value) {
+      // TODO: 发送表单数据到服务器，并处理响应
+
+      // 显示通知
+      showNotification({
+        message: '表单提交成功！3 秒后将自动刷新页面',
+        type: 'success',
+      });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    } else {
+      // 显示通知
+      showNotification({
+        message: '表单有错误，请检查填写信息！',
+        type: 'error',
+      });
+    }
+  };
+</script>
 
 <style scoped>
   form {
@@ -108,5 +277,27 @@
 
   button:hover {
     background-color: #40a9ff;
+  }
+
+  button[disabled] {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  .input-container {
+    position: relative;
+  }
+
+  .error {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    color: red;
   }
 </style>

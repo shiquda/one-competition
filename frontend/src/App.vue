@@ -1,6 +1,7 @@
 <script setup>
   import Footer from '@/components/Footer.vue';
   import Header from '@/components/Header.vue';
+  import NotificationContainer from '@/components/NotificationContainer.vue';
 </script>
 
 <template>
@@ -12,6 +13,7 @@
       <!-- 路由出口，动态渲染不同页面 -->
     </main>
 
+    <NotificationContainer />
     <Footer />
   </div>
 </template>
