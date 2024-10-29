@@ -2,6 +2,8 @@
 
 ## 开发中……
 
+(dev)在线查看：[https://one-competition.pages.dev/](https://one-competition.pages.dev/)
+
 ## 前端部署
 
 需要先安装 Node.js 和 pnpm。
