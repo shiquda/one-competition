@@ -20,6 +20,7 @@
       <HeaderButton title="关于" to="/about"></HeaderButton>
     </ul>
   </nav>
+  <div class="navigator-placeholder"></div>
 </template>
 
 <style scoped>
@@ -75,5 +76,9 @@
     font-weight: bold;
     color: #007bff;
     transition: color 0.3s;
+  }
+
+  .navigator-placeholder {
+    height: 60px; /* 与导航栏高度相同 */
   }
 </style>
