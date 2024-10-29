@@ -41,9 +41,3 @@
     margin-right: 0;
   }
 </style>
-
-<script>
-  export default {
-    name: 'Header',
-  };
-</script>

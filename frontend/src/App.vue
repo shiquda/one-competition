@@ -16,12 +16,6 @@
   </div>
 </template>
 
-<script>
-  export default {
-    name: 'App',
-  };
-</script>
-
 <style>
   /* 可以定义一些全局样式 */
   #app {

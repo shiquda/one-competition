@@ -4,13 +4,12 @@
   </li>
 </template>
 
-<script>
-  export default {
-    props: {
-      title: String,
-      to: String,
-    },
-  };
+<script setup>
+  // 绑定属性
+  defineProps({
+    title: String,
+    to: String,
+  });
 </script>
 
 <style scoped>

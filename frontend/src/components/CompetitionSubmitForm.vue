@@ -30,6 +30,8 @@
   </form>
 </template>
 
+<script setup></script>
+
 <style scoped>
   form {
     max-width: 900px;
@@ -108,9 +110,3 @@
     background-color: #40a9ff;
   }
 </style>
-
-<script>
-  export default {
-    name: 'CompetitionSubmitForm',
-  };
-</script>

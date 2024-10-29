@@ -13,9 +13,4 @@
     position: relative;
   }
 </style>
-
-<script>
-  export default {
-    name: 'About',
-  };
-</script>
+<script setup></script>
