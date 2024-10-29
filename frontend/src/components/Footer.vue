@@ -14,7 +14,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 20px;
+    padding: 2px;
     background-color: #f5f5f5;
     text-align: center;
   }
