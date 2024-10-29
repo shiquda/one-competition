@@ -26,7 +26,9 @@
       结束时间: <strong>{{ formatDate(competition.endTime) }}</strong>
     </p>
     <h2>竞赛官网</h2>
-    <a :href="competition.officialSiteUrl" target="_blank">竞赛官网</a>
+    <a :href="competition.officialSiteUrl" target="_blank">{{
+      competition.officialSiteUrl
+    }}</a>
     <h2>其他信息</h2>
     <p>{{ competition.otherInfo }}</p>
   </div>

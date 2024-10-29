@@ -5,7 +5,17 @@
 <template>
   <nav class="navigator">
     <ul>
-      <HeaderButton title="首页" to="/"></HeaderButton>
+      <div class="logo">
+        <router-link to="/" class="header-button">
+          <img
+            src="@/assets/imgs/logo.png"
+            alt="One 竞赛"
+            width="20"
+            height="20"
+          />
+          <span class="logo-text">One 竞赛</span>
+        </router-link>
+      </div>
       <HeaderButton title="投稿" to="/submit"></HeaderButton>
       <HeaderButton title="关于" to="/about"></HeaderButton>
     </ul>
@@ -14,7 +24,8 @@
 
 <style scoped>
   .navigator {
-    position: relative;
+    position: fixed;
+    top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
@@ -39,5 +50,30 @@
 
   .navigator ul li:last-child {
     margin-right: 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+  }
+
+  .logo .header-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .logo .header-button:hover {
+    background-color: transparent;
+    color: #007bff;
+  }
+
+  .logo-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+    transition: color 0.3s;
   }
 </style>
