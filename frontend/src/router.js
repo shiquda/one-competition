@@ -4,8 +4,13 @@ import Submit from '@/views/Submit.vue';
 import Home from '@/views/Home.vue';
 import CompetitionDetail from '@/views/CompetitionDetail.vue';
 import NotFound from '@/views/NotFound.vue';
+import Login from '@/views/Login.vue';
 
 const routes = [
+    {
+        path: '/index.html',
+        redirect: '/'
+    },
     {
         path: '/',
         name: 'Home',
@@ -22,14 +27,16 @@ const routes = [
         component: Submit
     },
     {
+        path: '/login',
+        name: 'Login',
+        component: Login
+    },
+    {
         path: '/competition/:id',
         name: 'CompetitionDetail',
         component: CompetitionDetail
     },
-    {
-        path: '/index.html',
-        redirect: '/'
-    },
+
     {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
