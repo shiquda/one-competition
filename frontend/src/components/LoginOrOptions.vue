@@ -1,13 +1,18 @@
 <template>
-  <div class="user-options-widget">
+  <div class="ml-auto">
     <template v-if="isLoggedIn">
       <!-- 用户已登录,显示一些功能按钮 -->
       <UserOptionsWidget />
     </template>
     <template v-else>
       <!-- 用户未登录,显示登录按钮 -->
-      <i class="fa-solid fa-user"></i>
-      <HeaderButton @click="login">登录</HeaderButton>
+      <button
+        @click="login"
+        class="flex items-center space-x-2 bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition-colors"
+      >
+        <i class="fa-solid fa-user"></i>
+        <span>登录</span>
+      </button>
     </template>
   </div>
 </template>
@@ -16,7 +21,6 @@
   import { ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import UserOptionsWidget from '@/components/UserOptionsWidget.vue';
-  import HeaderButton from '@/components/HeaderButton.vue';
 
   const router = useRouter();
 
@@ -41,9 +45,5 @@
 </script>
 
 <style scoped>
-  .user-options-widget {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-  }
+  /* 样式通过 Tailwind CSS 完成，无需额外样式 */
 </style>

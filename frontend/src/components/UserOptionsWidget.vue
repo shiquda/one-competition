@@ -1,14 +1,44 @@
 <template>
-  <div class="user-options">
-    <i class="fa-solid fa-user"></i>
-    <button @click="toggleDropdown" class="user-button">
-      {{ username }} ▼
-    </button>
-    <div v-if="isDropdownVisible" class="dropdown-menu">
+  <div class="relative inline-block text-left">
+    <button
+      @click="toggleDropdown"
+      class="flex items-center space-x-2 bg-white border border-gray-300 rounded-md px-3 py-2 hover:bg-gray-50 focus:outline-none"
+    >
       <i class="fa-solid fa-user"></i>
-      <a href="/personal-center" class="dropdown-item">个人中心</a>
-      <i class="fa-solid fa-right-from-bracket"></i>
-      <a href="#" @click.prevent="logout" class="dropdown-item">退出登录</a>
+      <span>{{ username }}</span>
+      <svg
+        class="w-4 h-4"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 9l-7 7-7-7"
+        />
+      </svg>
+    </button>
+    <div
+      v-if="isDropdownVisible"
+      class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+    >
+      <div class="py-1">
+        <router-link
+          to="/personal-center"
+          class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        >
+          <i class="fa-solid fa-user mr-2"></i>个人中心
+        </router-link>
+        <button
+          @click="logout"
+          class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        >
+          <i class="fa-solid fa-right-from-bracket mr-2"></i>退出登录
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -42,44 +72,12 @@
     mounted() {
       document.addEventListener('click', this.handleClickOutside);
     },
-    beforeDestroy() {
+    beforeUnmount() {
       document.removeEventListener('click', this.handleClickOutside);
     },
   };
 </script>
 
 <style scoped>
-  .user-options {
-    position: relative;
-    display: inline-block;
-  }
-
-  .user-button {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-
-  .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    min-width: 150px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-  }
-
-  .dropdown-item {
-    display: block;
-    padding: 10px 15px;
-    color: #333;
-    text-decoration: none;
-  }
-
-  .dropdown-item:hover {
-    background-color: #f5f5f5;
-  }
+  /* 样式通过 Tailwind CSS 完成，无需额外样式 */
 </style>

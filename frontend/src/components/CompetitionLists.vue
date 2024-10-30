@@ -1,91 +1,180 @@
 <template>
-  <div class="competition-lists">
-    <h2>🔥正在进行的比赛</h2>
-    <table class="competition-list">
-      <thead>
-        <tr>
-          <th>竞赛名称</th>
-          <th>开始时间</th>
-          <th>结束时间</th>
-          <th>距离结束</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="competition in sortedActivateCompetitions"
-          :key="competition.id"
-        >
-          <td>
-            <router-link :to="`/competition/${competition.id}`">
-              {{ competition.name }}
-            </router-link>
-          </td>
-          <td>{{ formatDate(competition.startTime) }}</td>
-          <td>{{ formatDate(competition.endTime) }}</td>
-          <td>
-            {{ formatDistanceToNow(competition.endTime) }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="container mx-auto p-6">
+    <div class="flex flex-col lg:flex-row lg:space-x-6 space-y-6 lg:space-y-0">
+      <!-- 即将到来的比赛 -->
+      <div class="flex-1 bg-white rounded-lg shadow p-4">
+        <h2 class="text-2xl font-semibold mb-4 flex items-center">
+          ✨即将到来的比赛
+          <span class="ml-2 text-sm text-gray-500"
+            >({{ sortedUpComingCompetitions.length }})</span
+          >
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-yellow-500 text-white">
+              <tr>
+                <th class="py-3 px-4 text-left text-sm font-medium">
+                  竞赛名称
+                </th>
+                <th class="py-3 px-4 text-left text-sm font-medium">
+                  开始时间
+                </th>
+                <th class="py-3 px-4 text-left text-sm font-medium">
+                  结束时间
+                </th>
+                <th class="py-3 px-4 text-left text-sm font-medium">
+                  距离开始
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr
+                v-for="competition in sortedUpComingCompetitions"
+                :key="competition.id"
+                class="hover:bg-yellow-50 transition-colors"
+              >
+                <td class="py-4 px-4">
+                  <router-link
+                    :to="`/competition/${competition.id}`"
+                    class="text-yellow-700 hover:underline font-medium"
+                  >
+                    {{ competition.name }}
+                  </router-link>
+                </td>
+                <td class="py-4 px-4">
+                  {{ formatDate(competition.startTime) }}
+                </td>
+                <td class="py-4 px-4">{{ formatDate(competition.endTime) }}</td>
+                <td class="py-4 px-4">
+                  {{ formatDistanceToNow(competition.startTime) }}
+                </td>
+              </tr>
+              <tr v-if="sortedUpComingCompetitions.length === 0">
+                <td colspan="4" class="py-4 px-4 text-center text-gray-500">
+                  暂无即将到来的比赛
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-    <h2>✨即将到来的比赛</h2>
-    <table class="competition-list">
-      <thead>
-        <tr>
-          <th>竞赛名称</th>
-          <th>开始时间</th>
-          <th>结束时间</th>
-          <th>距离现在</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="competition in sortedUpComingCompetitions"
-          :key="competition.id"
-        >
-          <td>
-            <router-link :to="`/competition/${competition.id}`">
-              {{ competition.name }}
-            </router-link>
-          </td>
-          <td>{{ formatDate(competition.startTime) }}</td>
-          <td>{{ formatDate(competition.endTime) }}</td>
-          <td>
-            {{ formatDistanceToNow(competition.startTime) }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+      <!-- 正在进行的比赛 -->
+      <div class="flex-1 bg-white rounded-lg shadow p-4">
+        <h2 class="text-2xl font-semibold mb-4 flex items-center">
+          🔥正在进行的比赛
+          <span class="ml-2 text-sm text-gray-500"
+            >({{ sortedActivateCompetitions.length }})</span
+          >
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-blue-600 text-white">
+              <tr>
+                <th class="py-3 px-4 text-left text-sm font-medium">
+                  竞赛名称
+                </th>
+                <th class="py-3 px-4 text-left text-sm font-medium">
+                  开始时间
+                </th>
+                <th class="py-3 px-4 text-left text-sm font-medium">
+                  结束时间
+                </th>
+                <th class="py-3 px-4 text-left text-sm font-medium">
+                  距离结束
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr
+                v-for="competition in sortedActivateCompetitions"
+                :key="competition.id"
+                class="hover:bg-blue-50 transition-colors"
+              >
+                <td class="py-4 px-4">
+                  <router-link
+                    :to="`/competition/${competition.id}`"
+                    class="text-blue-500 hover:underline font-medium"
+                  >
+                    {{ competition.name }}
+                  </router-link>
+                </td>
+                <td class="py-4 px-4">
+                  {{ formatDate(competition.startTime) }}
+                </td>
+                <td class="py-4 px-4">{{ formatDate(competition.endTime) }}</td>
+                <td class="py-4 px-4">
+                  {{ formatDistanceToNow(competition.endTime) }}
+                </td>
+              </tr>
+              <tr v-if="sortedActivateCompetitions.length === 0">
+                <td colspan="4" class="py-4 px-4 text-center text-gray-500">
+                  暂无正在进行的比赛
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-    <h2>💀已结束的比赛</h2>
-    <table class="competition-list">
-      <thead>
-        <tr>
-          <th>竞赛名称</th>
-          <th>开始时间</th>
-          <th>结束时间</th>
-          <th>距离现在</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="competition in sortedEndedCompetitions"
-          :key="competition.id"
-        >
-          <td>
-            <router-link :to="`/competition/${competition.id}`">
-              {{ competition.name }}
-            </router-link>
-          </td>
-          <td>{{ formatDate(competition.startTime) }}</td>
-          <td>{{ formatDate(competition.endTime) }}</td>
-          <td>
-            {{ formatDistanceToNow(competition.startTime) }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+      <!-- 已结束的比赛 -->
+      <div class="flex-1 bg-white rounded-lg shadow p-4">
+        <h2 class="text-2xl font-semibold mb-4 flex items-center">
+          💀已结束的比赛
+          <span class="ml-2 text-sm text-gray-500"
+            >({{ sortedEndedCompetitions.length }})</span
+          >
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-600 text-white">
+              <tr>
+                <th class="py-3 px-4 text-left text-sm font-medium">
+                  竞赛名称
+                </th>
+                <th class="py-3 px-4 text-left text-sm font-medium">
+                  开始时间
+                </th>
+                <th class="py-3 px-4 text-left text-sm font-medium">
+                  结束时间
+                </th>
+                <th class="py-3 px-4 text-left text-sm font-medium">
+                  距离结束
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr
+                v-for="competition in sortedEndedCompetitions"
+                :key="competition.id"
+                class="hover:bg-gray-50 transition-colors"
+              >
+                <td class="py-4 px-4">
+                  <router-link
+                    :to="`/competition/${competition.id}`"
+                    class="text-gray-700 hover:underline font-medium"
+                  >
+                    {{ competition.name }}
+                  </router-link>
+                </td>
+                <td class="py-4 px-4">
+                  {{ formatDate(competition.startTime) }}
+                </td>
+                <td class="py-4 px-4">{{ formatDate(competition.endTime) }}</td>
+                <td class="py-4 px-4">
+                  {{ formatDistanceToNow(competition.startTime) }}
+                </td>
+              </tr>
+              <tr v-if="sortedEndedCompetitions.length === 0">
+                <td colspan="4" class="py-4 px-4 text-center text-gray-500">
+                  暂无已结束的比赛
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -96,8 +185,8 @@
 
   const fetchCompetitions = async () => {
     try {
-      //   const response = await fetch('http://127.0.0.1:8000/competitions');
-      //   const data = await response.json();
+      // const response = await fetch('http://127.0.0.1:8000/competitions');
+      // const data = await response.json();
 
       // TODO: 对接后端
 
@@ -143,6 +232,13 @@
     fetchCompetitions();
   });
 
+  const sortedUpComingCompetitions = computed(() => {
+    const now = new Date();
+    return competitions.value
+      .filter(competition => new Date(competition.startTime) > now)
+      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+  });
+
   const sortedActivateCompetitions = computed(() => {
     const now = new Date();
     return competitions.value
@@ -151,13 +247,6 @@
           new Date(competition.startTime) < now &&
           new Date(competition.endTime) > now
       )
-      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
-  });
-
-  const sortedUpComingCompetitions = computed(() => {
-    const now = new Date();
-    return competitions.value
-      .filter(competition => new Date(competition.startTime) > now)
       .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
   });
 
@@ -178,42 +267,16 @@
     const targetDate = new Date(dateStr);
     const diffTime = targetDate - now;
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    return `${diffDays}天`;
+    if (diffDays > 0) {
+      return `${diffDays}天`;
+    } else if (diffDays === 0) {
+      return '今天';
+    } else {
+      return `${Math.abs(diffDays)}天前`;
+    }
   };
 </script>
 
 <style scoped>
-  .competition-list {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-
-  table {
-    width: 100%;
-  }
-
-  th,
-  td {
-    padding: 10px;
-    text-align: left;
-  }
-
-  tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-
-  tr:hover {
-    background-color: #ddd;
-  }
-
-  th {
-    background-color: #0396ff;
-    color: white;
-  }
-
-  a {
-    color: #0396ff;
-    text-decoration: none;
-  }
+  /* 样式通过 Tailwind CSS 完成，无需额外样式 */
 </style>

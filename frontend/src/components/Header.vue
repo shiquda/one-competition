@@ -4,17 +4,22 @@
 </script>
 
 <template>
-  <nav class="navigator">
-    <ul>
-      <div class="logo">
-        <router-link to="/" class="header-button">
+  <nav
+    class="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 bg-white shadow"
+  >
+    <ul class="flex items-center h-16 px-5">
+      <div class="flex items-center mr-5">
+        <router-link
+          to="/"
+          class="flex items-center space-x-2 text-blue-500 hover:text-blue-700"
+        >
           <img
             src="@/assets/imgs/logo.png"
             alt="One 竞赛"
             width="20"
             height="20"
           />
-          <span class="logo-text">One 竞赛</span>
+          <span class="text-lg font-bold">One 竞赛</span>
         </router-link>
       </div>
       <HeaderButton
@@ -27,68 +32,9 @@
         to="/about"
         awesomeIcon="fa-solid fa-circle-info"
       ></HeaderButton>
-      <LoginOrOptions />
+      <LoginOrOptions class="ml-auto" />
     </ul>
   </nav>
-  <div class="navigator-placeholder"></div>
+  <div class="h-16"></div>
+  <!-- 导航栏占位 -->
 </template>
-
-<style scoped>
-  .navigator {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    border-bottom: 1px solid #e0e0e0;
-    background-color: #f5f5f5;
-  }
-
-  .navigator ul {
-    display: flex;
-    justify-content: flex-start;
-    list-style: none;
-    padding: 0 20px;
-    height: 60px;
-    margin: 0;
-  }
-
-  .navigator ul li {
-    margin-right: 20px;
-    display: flex;
-    align-items: center;
-  }
-
-  .navigator ul li:last-child {
-    margin-right: 0;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    margin-right: 20px;
-  }
-
-  .logo .header-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-  }
-
-  .logo .header-button:hover {
-    background-color: transparent;
-    color: #007bff;
-  }
-
-  .logo-text {
-    font-size: 18px;
-    font-weight: bold;
-    color: #007bff;
-    transition: color 0.3s;
-  }
-
-  .navigator-placeholder {
-    height: 60px; /* 与导航栏高度相同 */
-  }
-</style>

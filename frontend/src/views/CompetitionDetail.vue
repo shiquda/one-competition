@@ -1,36 +1,66 @@
 <template>
-  <div class="competition-detail-header">
-    <h1>{{ competition.name }}</h1>
-  </div>
+  <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow">
+    <div class="mb-6 text-center">
+      <h1 class="text-3xl font-bold">{{ competition.name }}</h1>
+    </div>
 
-  <div class="competition-detail-tag-item">
-    类型：
-    <ul class="tag-list">
-      <li v-for="type in competition.type">{{ type }}</li>
-    </ul>
-    级别：
-    <ul class="tag-list">
-      <li v-for="level in competition.level">{{ level }}</li>
-    </ul>
-  </div>
+    <div class="flex space-x-10 mb-6">
+      <div class="flex-1">
+        <span class="font-medium text-gray-700">类型：</span>
+        <ul class="flex flex-wrap gap-2">
+          <li
+            v-for="type in competition.type"
+            :key="type"
+            class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
+          >
+            {{ type }}
+          </li>
+        </ul>
+      </div>
+      <div class="flex-1">
+        <span class="font-medium text-gray-700">级别：</span>
+        <ul class="flex flex-wrap gap-2">
+          <li
+            v-for="level in competition.level"
+            :key="level"
+            class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm"
+          >
+            {{ level }}
+          </li>
+        </ul>
+      </div>
+    </div>
 
-  <div class="competition-detail-content">
-    <h2>简介</h2>
+    <div class="mb-6">
+      <h2 class="text-2xl font-semibold mb-2">简介</h2>
+      <p class="text-gray-700">{{ competition.description }}</p>
+    </div>
 
-    <p>{{ competition.description }}</p>
-    <h2>时间节点</h2>
-    <p>
-      开始时间: <strong>{{ formatDate(competition.startTime) }}</strong>
-    </p>
-    <p>
-      结束时间: <strong>{{ formatDate(competition.endTime) }}</strong>
-    </p>
-    <h2>竞赛官网</h2>
-    <a :href="competition.officialSiteUrl" target="_blank">{{
-      competition.officialSiteUrl
-    }}</a>
-    <h2>其他信息</h2>
-    <p>{{ competition.otherInfo }}</p>
+    <div class="mb-6">
+      <h2 class="text-2xl font-semibold mb-2">时间节点</h2>
+      <p>
+        开始时间: <strong>{{ formatDate(competition.startTime) }}</strong>
+      </p>
+      <p>
+        结束时间: <strong>{{ formatDate(competition.endTime) }}</strong>
+      </p>
+    </div>
+
+    <div class="mb-6">
+      <h2 class="text-2xl font-semibold mb-2">竞赛官网</h2>
+      <a
+        :href="competition.officialSiteUrl"
+        target="_blank"
+        class="text-blue-500 hover:underline"
+      >
+        {{ competition.officialSiteUrl }}
+      </a>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-semibold mb-2">其他信息</h2>
+      <p class="text-gray-700">{{ competition.otherInfo }}</p>
+    </div>
   </div>
 </template>
 
@@ -73,53 +103,3 @@
     return new Date(dateStr).toLocaleDateString('zh-CN', options);
   };
 </script>
-
-<style scoped>
-  .competition-detail-header {
-    margin: 0 auto;
-    padding: 10px;
-  }
-
-  .competition-detail-content {
-    margin-left: 20%;
-    text-align: left;
-  }
-
-  .competition-detail-content a {
-    color: #1890ff;
-    text-decoration: none;
-  }
-
-  .competition-detail-content a:hover {
-    text-decoration: underline;
-  }
-
-  .competition-detail-tag-item {
-    display: inline-block;
-    margin-right: 40px;
-  }
-
-  .competition-detail-tag-item ul {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-  }
-
-  .competition-detail-tag-item li {
-    display: inline-block;
-    margin-right: 10px;
-  }
-
-  .tag-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .tag-list li {
-    list-style: none;
-    padding: 5px 10px;
-    border: 1px solid #1890ff;
-    border-radius: 5px;
-  }
-</style>

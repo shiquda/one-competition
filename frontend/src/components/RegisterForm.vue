@@ -1,44 +1,77 @@
 <template>
-  <h1>注册</h1>
-  <form>
-    <label for="username">用户名</label>
-    <input
-      type="text"
-      id="username"
-      placeholder="请输入用户名"
-      v-model="username"
-    />
+  <div class="max-w-lg mx-auto p-6 bg-gray-100 rounded-lg shadow">
+    <h1 class="text-2xl font-bold mb-4 text-center">注册</h1>
+    <form>
+      <div class="mb-4">
+        <label for="username" class="block text-sm font-medium text-gray-700"
+          >用户名</label
+        >
+        <input
+          type="text"
+          id="username"
+          placeholder="请输入用户名"
+          v-model="username"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
 
-    <label for="email">邮箱</label>
-    <span class="error">{{ emailError }}</span>
-    <input
-      type="email"
-      id="email"
-      placeholder="请输入邮箱"
-      v-model="email"
-      @input="validateEmail"
-    />
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-medium text-gray-700"
+          >邮箱</label
+        >
+        <input
+          type="email"
+          id="email"
+          placeholder="请输入邮箱"
+          v-model="email"
+          @input="validateEmail"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        />
+        <span class="text-red-500 text-sm mt-1 block" v-if="emailError">{{
+          emailError
+        }}</span>
+      </div>
 
-    <label for="password">密码</label>
-    <span class="error">{{ passwordError }}</span>
-    <input
-      type="password"
-      id="password"
-      placeholder="密码位数为8-32位，且包含大小写字母和数字"
-      v-model="password"
-      @input="validatePassword"
-    />
-    <!-- TODO: 邮箱验证 -->
+      <div class="mb-4">
+        <label for="password" class="block text-sm font-medium text-gray-700"
+          >密码</label
+        >
+        <input
+          type="password"
+          id="password"
+          placeholder="密码位数为8-32位，且包含大小写字母和数字"
+          v-model="password"
+          @input="validatePassword"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        />
+        <span class="text-red-500 text-sm mt-1 block" v-if="passwordError">{{
+          passwordError
+        }}</span>
+      </div>
 
-    <button type="submit" @click.prevent="register">注册</button>
-    <p>已经有账号？<router-link to="/login">登录</router-link></p>
-  </form>
+      <button
+        type="submit"
+        @click.prevent="register"
+        :disabled="hasErrors"
+        class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+      >
+        注册
+      </button>
+      <p class="mt-4 text-center text-sm">
+        已经有账号？<router-link
+          to="/login"
+          class="text-blue-500 hover:underline"
+          >登录</router-link
+        >
+      </p>
+    </form>
+  </div>
 </template>
 
 <script setup>
-  import { ref } from 'vue';
-  import { useRouter } from 'vue-router';
+  import { ref, computed, onMounted } from 'vue';
   import showNotification from '@/utils/showNotification';
+  import { useRouter } from 'vue-router';
 
   const router = useRouter(); // 获取 router 实例
 
@@ -93,65 +126,3 @@
     }
   };
 </script>
-
-<style scoped>
-  .error {
-    color: #ff4d4f;
-    font-size: 14px;
-    margin-bottom: 12px;
-    display: block;
-  }
-
-  input {
-    width: 100%;
-    max-width: 300px;
-    margin-bottom: 16px;
-    padding: 8px 12px;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: all 0.3s;
-    display: block;
-    margin: 0 auto;
-    margin-bottom: 12px;
-    margin-top: 8px;
-  }
-
-  input:focus {
-    border-color: #40a9ff;
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-    outline: none;
-  }
-
-  input:hover {
-    border-color: #40a9ff;
-  }
-
-  button {
-    margin-top: 12px;
-    display: block;
-    margin: 0 auto;
-    padding: 8px 24px;
-    width: 325px;
-    border: none;
-    border-radius: 4px;
-    background-color: #40a9ff;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-    letter-spacing: 10px;
-    text-align: center;
-  }
-
-  button:hover {
-    background-color: #1890ff;
-  }
-
-  a {
-    color: #40a9ff;
-    text-decoration: none;
-    font-weight: bold;
-  }
-</style>
