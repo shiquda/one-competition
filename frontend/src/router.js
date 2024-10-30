@@ -5,7 +5,7 @@ import Home from '@/views/Home.vue';
 import CompetitionDetail from '@/views/CompetitionDetail.vue';
 import NotFound from '@/views/NotFound.vue';
 import Login from '@/views/Login.vue';
-
+import Register from '@/views/Register.vue';
 const routes = [
     {
         path: '/index.html',
@@ -30,6 +30,11 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: Login
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: Register
     },
     {
         path: '/competition/:id',
