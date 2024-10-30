@@ -1,5 +1,6 @@
 <script setup>
   import HeaderButton from './HeaderButton.vue';
+  import LoginOrOptions from './LoginOrOptions.vue';
 </script>
 
 <template>
@@ -26,6 +27,7 @@
         to="/about"
         awesomeIcon="fa-solid fa-circle-info"
       ></HeaderButton>
+      <LoginOrOptions />
     </ul>
   </nav>
   <div class="navigator-placeholder"></div>
