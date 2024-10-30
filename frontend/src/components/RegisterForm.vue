@@ -31,17 +31,22 @@
     <!-- TODO: 邮箱验证 -->
 
     <button type="submit" @click.prevent="register">注册</button>
+    <p>已经有账号？<router-link to="/login">登录</router-link></p>
   </form>
 </template>
 
 <script setup>
   import { ref } from 'vue';
+  import { useRouter } from 'vue-router';
+  import showNotification from '@/utils/showNotification';
+
+  const router = useRouter(); // 获取 router 实例
 
   const username = ref('');
   const email = ref('');
   const password = ref('');
 
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,32}$/;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordError = ref('');
   const emailError = ref('');
@@ -62,12 +67,30 @@
     }
   };
 
-  const register = () => {
+  const register = async () => {
     validatePassword();
     validateEmail();
     if (passwordError.value || emailError.value) return;
     // TODO: 注册请求
     console.log(username.value, email.value, password.value);
+    // test
+    const success = true;
+    if (success) {
+      showNotification({
+        message: '注册成功！将自动跳转至登录页面',
+        type: 'success',
+        duration: 2000,
+      });
+      setTimeout(() => {
+        router.push('/login'); // 使用 router 实例进行路由跳转
+      }, 2500);
+    } else {
+      showNotification({
+        message: '注册失败！请稍后再试',
+        type: 'error',
+        duration: 2000,
+      });
+    }
   };
 </script>
 
@@ -124,5 +147,11 @@
 
   button:hover {
     background-color: #1890ff;
+  }
+
+  a {
+    color: #40a9ff;
+    text-decoration: none;
+    font-weight: bold;
   }
 </style>

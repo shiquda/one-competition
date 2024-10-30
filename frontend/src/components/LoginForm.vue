@@ -25,24 +25,35 @@
 
 <script setup>
   import { ref } from 'vue';
+  import showNotification from '@/utils/showNotification';
+  import { useRouter } from 'vue-router';
+
+  const router = useRouter();
 
   const username = ref('');
   const password = ref('');
-  // 密码前端验证，必须大于8位，且包含大小字母和数字
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-  const passwordError = ref('');
-
-  const validatePassword = () => {
-    if (!passwordRegex.test(password.value)) {
-      passwordError.value = '密码必须大于8位，且包含大小字母和数字';
-    }
-  };
 
   const login = () => {
-    validatePassword();
-    if (passwordError.value) return;
-    // TODO: 登录请求
     console.log(username.value, password.value);
+
+    // test
+    const success = true;
+    if (success) {
+      showNotification({
+        message: '登录成功！将自动跳转至首页',
+        type: 'success',
+        duration: 2000,
+      });
+      setTimeout(() => {
+        router.push('/'); // 使用 router 实例进行路由跳转
+      }, 2500);
+    } else {
+      showNotification({
+        message: '登录失败！请稍后再试',
+        type: 'error',
+        duration: 3000,
+      });
+    }
   };
 </script>
 
