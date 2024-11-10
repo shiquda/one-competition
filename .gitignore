@@ -1,0 +1,9 @@
+# 忽略所有 .pyc 文件
+*.pyc
+
+# 忽略所有 __pycache__ 文件夹
+__pycache__/
+
+#将 .gitignore 文件的更新和其他变动提交到仓库中
+git add .gitignore
+git commit -m "Add .pyc files and __pycache__ folder to .gitignore"
