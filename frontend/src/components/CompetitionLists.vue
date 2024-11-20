@@ -179,76 +179,29 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, computed } from 'vue';
+  import { computed } from 'vue';
+  import { useRoute } from 'vue-router';
 
-  const competitions = ref([]);
-
-  const fetchCompetitions = async () => {
-    try {
-      // const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-      // const response = await fetch(`${API_BASE_URL}/competitions`);
-      // const data = await response.json();
-
-      // TODO: 对接后端
-
-      // 测试数据
-      competitions.value = [
-        {
-          id: 1,
-          name: '竞赛1',
-          startTime: '2024-12-01',
-          endTime: '2024-12-02',
-        },
-        {
-          id: 2,
-          name: '竞赛2',
-          startTime: '2025-01-05',
-          endTime: '2025-01-08',
-        },
-        {
-          id: 3,
-          name: '2024期中考',
-          startTime: '2024-11-19',
-          endTime: '2024-11-22',
-        },
-        {
-          id: 4,
-          name: '2023半期考',
-          startTime: '2023-11-19',
-          endTime: '2023-11-22',
-        },
-        {
-          id: 5,
-          name: '马拉松',
-          startTime: '2000-12-01',
-          endTime: '2039-12-31',
-        },
-        {
-          id: 100,
-          name: '测试竞赛',
-          startTime: '2024-11-19',
-          endTime: '2024-11-22',
-        },
-      ];
-    } catch (error) {
-      console.error('获取竞赛数据失败:', error);
-    }
-  };
-
-  onMounted(() => {
-    fetchCompetitions();
+  // 接收来自父组件的竞赛数据
+  const props = defineProps({
+    competitions: {
+      type: Array,
+      required: true,
+    },
   });
 
+  // 计算即将到来的比赛
   const sortedUpComingCompetitions = computed(() => {
     const now = new Date();
-    return competitions.value
+    return props.competitions
       .filter(competition => new Date(competition.startTime) > now)
       .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
   });
 
+  // 计算正在进行的比赛
   const sortedActivateCompetitions = computed(() => {
     const now = new Date();
-    return competitions.value
+    return props.competitions
       .filter(
         competition =>
           new Date(competition.startTime) < now &&
@@ -257,18 +210,21 @@
       .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
   });
 
+  // 计算已结束的比赛
   const sortedEndedCompetitions = computed(() => {
     const now = new Date();
-    return competitions.value
+    return props.competitions
       .filter(competition => new Date(competition.endTime) < now)
       .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
   });
 
+  // 日期格式化函数
   const formatDate = dateStr => {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     return new Date(dateStr).toLocaleDateString('zh-CN', options);
   };
 
+  // 计算距离现在的天数
   const formatDistanceToNow = dateStr => {
     const now = new Date();
     const targetDate = new Date(dateStr);
@@ -284,6 +240,4 @@
   };
 </script>
 
-<style scoped>
-  /* 样式通过 Tailwind CSS 完成，无需额外样式 */
-</style>
+<style scoped></style>

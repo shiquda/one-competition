@@ -9,6 +9,9 @@ import '@/assets/tailwind.css'
 import '@fortawesome/fontawesome-free/css/all.css';
 import '@fortawesome/fontawesome-free/js/all.js';
 
+// 引入 vue-cal 的样式文件
+import 'vue-cal/dist/vuecal.css';
+
 const app = createApp(App);
 app.use(router);
 app.mount('#app');
