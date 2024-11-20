@@ -185,7 +185,8 @@
 
   const fetchCompetitions = async () => {
     try {
-      // const response = await fetch('http://127.0.0.1:8000/competitions');
+      // const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      // const response = await fetch(`${API_BASE_URL}/competitions`);
       // const data = await response.json();
 
       // TODO: 对接后端
@@ -206,21 +207,27 @@
         },
         {
           id: 3,
-          name: '竞赛3',
-          startTime: '2024-11-06',
-          endTime: '2024-11-06',
+          name: '2024期中考',
+          startTime: '2024-11-19',
+          endTime: '2024-11-22',
         },
         {
           id: 4,
-          name: '竞赛4',
-          startTime: '2023-11-06',
-          endTime: '2023-11-06',
+          name: '2023半期考',
+          startTime: '2023-11-19',
+          endTime: '2023-11-22',
         },
         {
           id: 5,
-          name: '竞赛5',
+          name: '马拉松',
           startTime: '2000-12-01',
           endTime: '2039-12-31',
+        },
+        {
+          id: 100,
+          name: '测试竞赛',
+          startTime: '2024-11-19',
+          endTime: '2024-11-22',
         },
       ];
     } catch (error) {
