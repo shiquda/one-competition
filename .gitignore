@@ -3,3 +3,7 @@
 
 # 忽略所有 __pycache__ 文件夹
 __pycache__/
+
+# 忽略虚拟环境
+
+/backend/.venv
