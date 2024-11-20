@@ -3,6 +3,7 @@ from django import forms
 from django.contrib import admin
 from .models import Competition, CompetitionTimeline
 
+
 class CompetitionAdminForm(forms.ModelForm):
     types = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': '输入竞赛类型，用逗号分隔'}),
@@ -27,6 +28,7 @@ class CompetitionAdminForm(forms.ModelForm):
         levels = self.cleaned_data.get('levels', '')
         return [level.strip() for level in levels.split(',') if level.strip()]
 
+
 class CompetitionTimelineInline(admin.TabularInline):
     model = CompetitionTimeline
     extra = 1  # 显示一个额外的空白表单，用于添加新节点
@@ -34,9 +36,10 @@ class CompetitionTimelineInline(admin.TabularInline):
     verbose_name = "时间节点"
     verbose_name_plural = "时间节点"
 
+
 class CompetitionAdmin(admin.ModelAdmin):
     form = CompetitionAdminForm
-    list_display = ('name', 'display_types', 'display_levels')
+    list_display = ('name', 'display_types', 'display_levels', 'get_start_time', 'get_end_time')
     search_fields = ('name',)
     inlines = [CompetitionTimelineInline]
 
@@ -47,5 +50,20 @@ class CompetitionAdmin(admin.ModelAdmin):
     def display_levels(self, obj):
         return ', '.join(obj.levels)
     display_levels.short_description = "竞赛级别"
+
+    def get_start_time(self, obj):
+        timeline = obj.timeline.all().order_by('date')
+        if timeline.exists():
+            return timeline.first().date
+        return '暂无'
+    get_start_time.short_description = "开始时间"
+
+    def get_end_time(self, obj):
+        timeline = obj.timeline.all().order_by('-date')
+        if timeline.exists():
+            return timeline.first().date
+        return '暂无'
+    get_end_time.short_description = "结束时间"
+
 
 admin.site.register(Competition, CompetitionAdmin)
