@@ -136,4 +136,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # 只允许来自 http://localhost:5173 的请求
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://one-competition.pages.dev"
 ]
