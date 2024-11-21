@@ -7,7 +7,7 @@ import NotFound from '@/views/NotFound.vue';
 import Login from '@/views/Login.vue';
 import Register from '@/views/Register.vue';
 import UserCenter from '@/views/UserCenter.vue'; // 新增
-import Admin from '@/views/Admin.vue';  // 引入后台管理页面
+
 
 const routes = [
     {
@@ -18,12 +18,7 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home
-    },
-    {
-        path: '/admin',
-        name: 'Admin',
-        component: Admin
-    },
+    },   
     {
         path: '/about',
         name: 'About',
