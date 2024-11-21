@@ -6,6 +6,9 @@ import CompetitionDetail from '@/views/CompetitionDetail.vue';
 import NotFound from '@/views/NotFound.vue';
 import Login from '@/views/Login.vue';
 import Register from '@/views/Register.vue';
+import UserCenter from '@/views/UserCenter.vue'; // 新增
+
+
 const routes = [
     {
         path: '/index.html',
@@ -15,7 +18,7 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home
-    },
+    },   
     {
         path: '/about',
         name: 'About',
@@ -37,11 +40,15 @@ const routes = [
         component: Register
     },
     {
+        path: '/personal-center',
+        name: 'UserCenter',
+        component: UserCenter // 新增的个人中心页面
+    },
+    {
         path: '/competition/:id',
         name: 'CompetitionDetail',
         component: CompetitionDetail
     },
-
     {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
