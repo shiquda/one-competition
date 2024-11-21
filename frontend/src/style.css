@@ -77,3 +77,139 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+.admin-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.admin-container table {
+  min-width: 100%;
+  background-color: #1f2937;
+  color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admin-container th,
+.admin-container td {
+  padding: 0.75rem 1rem;
+}
+
+.admin-container th {
+  text-align: left;
+  background-color: #374151;
+}
+
+.admin-container td {
+  border-top: 1px solid #374151;
+}
+
+.admin-container td span {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  color: #fff;
+}
+
+.admin-container td button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.admin-container td button:hover {
+  opacity: 0.9;
+}
+
+.admin-container .bg-green-500 {
+  background-color: #10b981;
+}
+
+.admin-container .bg-red-500 {
+  background-color: #ef4444;
+}
+
+.admin-container .bg-yellow-500 {
+  background-color: #f59e0b;
+}
+
+.admin-container .bg-blue-500 {
+  background-color: #3b82f6;
+}
+
+.admin-container .bg-gray-500 {
+  background-color: #6b7280;
+}
+
+.admin-container .bg-green-600:hover {
+  background-color: #059669;
+}
+
+.admin-container .bg-red-600:hover {
+  background-color: #dc2626;
+}
+
+.admin-container .bg-yellow-600:hover {
+  background-color: #d97706;
+}
+
+.admin-container .bg-blue-600:hover {
+  background-color: #2563eb;
+}
+
+.admin-container .bg-gray-600:hover {
+  background-color: #4b5563;
+}
+
+.fixed {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.fixed .bg-white {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  width: 50%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.fixed h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.fixed label {
+  font-weight: 700;
+}
+
+.fixed input,
+.fixed textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+}
+
+.fixed .mt-6 {
+  margin-top: 1.5rem;
+}
+
+.fixed .text-right {
+  text-align: right;
+}
+
