@@ -1,2 +1,6 @@
 Django==5.1.2
-elasticsearch_dsl==8.15.4
+django-cors-headers==4.6.0
+elastic-transport==8.15.1
+elasticsearch==8.16.0
+elasticsearch-dsl==8.15.4
+PyMySQL==1.1.1
