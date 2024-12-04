@@ -146,6 +146,11 @@ def add_competition(request):
 
 
 def delete_competition(request, competition_id):
-    competition = get_object_or_404(Competition, pk=competition_id)
-    competition.delete()
-    return JsonResponse({'message': 'Competition deleted successfully'})
+    try:
+        competition = get_object_or_404(Competition, pk=competition_id)
+        competition.delete()
+        return JsonResponse({'message': '竞赛删除成功'})
+    except Competition.DoesNotExist:
+        return JsonResponse({'error': '找不到指定的竞赛'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': f'删除竞赛时发生服务器错误: {e}'}, status=500)
