@@ -1,7 +1,7 @@
 # backend/competition/admin.py
 from django import forms
 from django.contrib import admin
-from .models import Competition, CompetitionTimeline
+from .models import Competition, CompetitionTimeline, User
 
 
 class CompetitionAdminForm(forms.ModelForm):
@@ -67,3 +67,4 @@ class CompetitionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Competition, CompetitionAdmin)
+admin.site.register(User)

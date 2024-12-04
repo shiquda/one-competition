@@ -2,11 +2,12 @@
 from elasticsearch_dsl import Document, Text, Keyword, Date
 from .models import Competition
 
+
 class CompetitionDocument(Document):
     name = Text()
     description = Text()
-    type_labels = Keyword()
-    level_labels = Keyword()
+    types = Keyword()
+    levels = Keyword()
     website = Keyword()
     other_info = Text()
     timeline = Date()

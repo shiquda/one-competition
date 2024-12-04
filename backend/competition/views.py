@@ -8,10 +8,35 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from datetime import datetime
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
+from datetime import datetime
+from .models import Competition, CompetitionTimeline, User
+from functools import wraps
+
+
+def admin_required(view_func):
+    """管理员权限验证装饰器"""
+    @wraps(view_func)
+    def wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return Response({"error": "请先登录"}, status=status.HTTP_401_UNAUTHORIZED)
+        if not request.user.is_admin_user():
+            return Response({"error": "需要管理员权限"}, status=status.HTTP_403_FORBIDDEN)
+        return view_func(request, *args, **kwargs)
+    return wrapped_view
 
 # 获取所有竞赛信息
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def get_all_competitions(request):
     competitions = Competition.objects.all().values()
     # 加上时间节点信息
@@ -24,6 +49,8 @@ def get_all_competitions(request):
 # 获取单个竞赛的详细信息
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def get_competition_detail(request, competition_id):
     competition = get_object_or_404(Competition, pk=competition_id)
     timelines = competition.timeline.all().values()  # 获取时间节点信息
@@ -43,7 +70,8 @@ def get_competition_detail(request, competition_id):
 
 
 @csrf_exempt
-@require_http_methods(["POST"])
+@api_view(['POST'])
+@admin_required
 def add_competition(request):
     try:
         data = json.loads(request.body)
@@ -145,6 +173,7 @@ def add_competition(request):
 # 删除竞赛
 
 
+@admin_required
 def delete_competition(request, competition_id):
     try:
         competition = get_object_or_404(Competition, pk=competition_id)
@@ -154,3 +183,72 @@ def delete_competition(request, competition_id):
         return JsonResponse({'error': '找不到指定的竞赛'}, status=404)
     except Exception as e:
         return JsonResponse({'error': f'删除竞赛时发生服务器错误: {e}'}, status=500)
+
+
+def admin_required(view_func):
+    """管理员权限验证装饰器"""
+    def wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return Response({"error": "请先登录"}, status=status.HTTP_401_UNAUTHORIZED)
+        if not request.user.is_admin_user():
+            return Response({"error": "需要管理员权限"}, status=status.HTTP_403_FORBIDDEN)
+        return view_func(request, *args, **kwargs)
+    return wrapped_view
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register(request):
+    """用户注册"""
+    try:
+        username = request.data.get('username')
+        password = request.data.get('password')
+        email = request.data.get('email', '')
+
+        if not username or not password:
+            return Response({"error": "用户名和密码不能为空"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if User.objects.filter(username=username).exists():
+            return Response({"error": "用户名已存在"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            email=email,
+            user_type='regular'  # 默认创建普通用户
+        )
+
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'message': '注册成功',
+            'token': str(refresh.access_token),
+            'refresh': str(refresh),
+            'username': user.username,
+            'user_type': user.user_type
+        }, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login(request):
+    """用户登录"""
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    if not username or not password:
+        return Response({"error": "用户名和密码不能为空"}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'message': '登录成功',
+            'token': str(refresh.access_token),
+            'refresh': str(refresh),
+            'username': user.username,
+            'user_type': user.user_type
+        })
+    return Response({"error": "用户名或密码错误"}, status=status.HTTP_401_UNAUTHORIZED)
