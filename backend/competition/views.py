@@ -25,8 +25,8 @@ def get_competition_detail(request, competition_id):
     data = {
         "id": competition.id,
         "name": competition.name,
-        "type_labels": competition.type_labels,
-        "level_labels": competition.level_labels,
+        "types": competition.types,
+        "levels": competition.levels,
         "description": competition.description,
         "website": competition.website,
         "other_info": competition.other_info,
@@ -42,8 +42,8 @@ def add_competition(request):
         data = json.loads(request.body)
         competition = Competition.objects.create(
             name=data.get('name'),
-            type_labels=data.get('type_labels'),
-            level_labels=data.get('level_labels'),
+            types=data.get('types'),
+            levels=data.get('levels'),
             description=data.get('description'),
             website=data.get('website'),
             other_info=data.get('other_info', '')
