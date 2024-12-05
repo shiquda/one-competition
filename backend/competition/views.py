@@ -252,3 +252,26 @@ def login(request):
             'user_type': user.user_type
         })
     return Response({"error": "用户名或密码错误"}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    """用户修改密码"""
+    user = request.user
+    old_password = request.data.get('old_password')
+    new_password = request.data.get('new_password')
+    confirm_password = request.data.get('confirm_password')
+
+    if not old_password or not new_password or not confirm_password:
+        return Response({"error": "旧密码、新密码和确认密码不能为空"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not user.check_password(old_password):
+        return Response({"error": "旧密码不正确"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if new_password != confirm_password:
+        return Response({"error": "新密码和确认密码不匹配"}, status=status.HTTP_400_BAD_REQUEST)
+
+    user.set_password(new_password)
+    user.save()
+    return Response({"message": "密码修改成功"}, status=status.HTTP_200_OK)
