@@ -12,5 +12,6 @@ urlpatterns = [
     # 用户认证相关
     path('api/auth/register/', views.register, name='register'),
     path('api/auth/login/', views.login, name='login'),
+    path('api/auth/change_password/', views.change_password, name='change_password'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
