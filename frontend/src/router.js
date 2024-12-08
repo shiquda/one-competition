@@ -6,8 +6,10 @@ import CompetitionDetail from '@/views/CompetitionDetail.vue';
 import NotFound from '@/views/NotFound.vue';
 import Login from '@/views/Login.vue';
 import Register from '@/views/Register.vue';
-import UserCenter from '@/views/UserCenter.vue'; // 新增
-import Admin from '@/views/Admin.vue';  // 引入后台管理页面
+import UserCenter from '@/views/UserCenter.vue';
+import Admin from '@/views/Admin.vue';
+import { getAccessToken } from '@/utils/auth';
+import authStore from '@/store/authStore.js';
 
 const routes = [
     {
@@ -27,12 +29,14 @@ const routes = [
     {
         path: '/admin',
         name: 'Admin',
-        component: Admin
+        component: Admin,
+        meta: { requiresAuth: true, isAdmin: true }
     },
     {
         path: '/submit',
         name: 'Submit',
-        component: Submit
+        component: Submit,
+        meta: { requiresAuth: true }
     },
     {
         path: '/login',
@@ -47,7 +51,8 @@ const routes = [
     {
         path: '/personal-center',
         name: 'UserCenter',
-        component: UserCenter // 新增的个人中心页面
+        component: UserCenter,
+        meta: { requiresAuth: true }
     },
     {
         path: '/competition/:id',
@@ -62,8 +67,38 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes
+});
+
+// 路由守卫
+router.beforeEach((to, from, next) => {
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+    const isAdmin = to.matched.some(record => record.meta.isAdmin);
+    const token = getAccessToken();
+    const isLoggedIn = authStore.isLoggedIn;
+
+    if (requiresAuth && !token) {
+        next('/login');
+    } else if (isAdmin) {
+        // 需要进一步验证用户是否为管理员
+        // 这可以通过在前端存储用户类型来实现，例如在登录时存储
+        const userType = localStorage.getItem('userType'); // 假设存储在本地
+        if (userType === 'admin') {
+            next();
+        } else {
+            next('/');
+            showNotification({
+                message: '您没有访问该页面的权限。',
+                type: 'error',
+                duration: 3000,
+            });
+        }
+    } else if (requiresAuth && !isLoggedIn) {
+        next('/login');
+    } else {
+        next();
+    }
 });
 
 export default router;
