@@ -19,7 +19,7 @@ from django.core.exceptions import ValidationError
 from datetime import datetime
 from .models import Competition, CompetitionTimeline, User
 from functools import wraps
-from rest_framework.permissions import IsAdminUser
+from .serializers import CompetitionSerializer  # 需要创建这个序列化器
 
 def admin_required(view_func):
     """管理员权限验证装饰器"""
@@ -32,28 +32,42 @@ def admin_required(view_func):
         return view_func(request, *args, **kwargs)
     return wrapped_view
 
-# 获取所有竞赛信息
+# 获取所有审核通过的竞赛信息
 
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_all_competitions(request):
-    competitions = Competition.objects.all().values()
-    # 加上时间节点信息
+    # 只获取审核通过的竞赛
+    competitions = Competition.objects.filter(review_status='approved').values()
+    
+    # 添加时间节点信息
     for competition in competitions:
-        competition['timeline'] = list(CompetitionTimeline.objects.filter(
-            competition=competition['id']).values('node_name', 'date'))
+        timelines = CompetitionTimeline.objects.filter(
+            competition_id=competition['id']
+        ).values('node_name', 'date')
+        competition['timeline'] = list(timelines)
 
     return JsonResponse(list(competitions), safe=False)
 
-# 获取单个竞赛的详细信息
+# 获取单个竞赛（审核通过）的详细信息
 
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_competition_detail(request, competition_id):
+    # 获取并检查竞赛是否审核通过
     competition = get_object_or_404(Competition, pk=competition_id)
-    timelines = competition.timeline.all().values()  # 获取时间节点信息
+    
+    if competition.review_status != 'approved':
+        return Response(
+            {'error': '该竞赛尚未通过审核或已被拒绝'}, 
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    # 获取时间节点信息
+    timelines = competition.timeline.all().values()
+    
     data = {
         "id": competition.id,
         "name": competition.name,
@@ -64,6 +78,7 @@ def get_competition_detail(request, competition_id):
         "other_info": competition.other_info,
         "timeline": list(timelines),
     }
+    
     return JsonResponse(data)
 
 # 添加新竞赛
@@ -275,44 +290,173 @@ def change_password(request):
     user.set_password(new_password)
     user.save()
     return Response({"message": "密码修改成功"}, status=status.HTTP_200_OK)
-
-# 增加审核相关操作
 @api_view(['GET'])
-def get_approved_competitions(request):
-    """获取所有审核通过的竞赛"""
-    competitions = Competition.objects.filter(review_status='approved')
-    serializer = CompetitionSerializer(competitions, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAuthenticated])
 def get_all_competitions_admin(request):
-    """管理员获取所有竞赛（包括待审核和已拒绝的）"""
+    # 检查用户是否是管理员
+    if not request.user.is_admin_user():
+        return Response({
+            'error': '权限不足，仅管理员可访问此接口'
+        }, status=status.HTTP_403_FORBIDDEN)
+    
+    # 如果是管理员，获取所有竞赛
     competitions = Competition.objects.all()
     serializer = CompetitionSerializer(competitions, many=True)
     return Response(serializer.data)
-
-@api_view(['POST'])
-@permission_classes([IsAdminUser])
-def review_competition(request, competition_id):
-    """审核竞赛"""
+@api_view(['PUT'])
+@admin_required
+def update_competition(request, competition_id):
     try:
-        competition = Competition.objects.get(pk=competition_id)
+        # 获取竞赛对象
+        competition = get_object_or_404(Competition, pk=competition_id)
+        
+        # 获取请求数据
+        data = request.data
+        
+        # 更新基本字段（如果提供）
+        if 'name' in data:
+            competition.name = data['name'].strip()
+        if 'types' in data and isinstance(data['types'], list):
+            competition.types = [t.strip() for t in data['types']]
+        if 'levels' in data and isinstance(data['levels'], list):
+            competition.levels = [l.strip() for l in data['levels']]
+        if 'description' in data:
+            competition.description = data['description'].strip()
+        if 'website' in data:
+            # 验证 URL
+            url_validator = URLValidator()
+            try:
+                url_validator(data['website'])
+                competition.website = data['website'].strip()
+            except ValidationError:
+                return Response({'error': '无效的URL格式'}, status=status.HTTP_400_BAD_REQUEST)
+        if 'other_info' in data:
+            competition.other_info = data['other_info'].strip()
+        if 'review_status' in data:
+            if data['review_status'] in dict(Competition.REVIEW_STATUS_CHOICES):
+                competition.review_status = data['review_status']
+            else:
+                return Response({'error': '无效的审核状态'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # 更新时间节点（如果提供）
+        if 'timeline' in data:
+            timeline = data['timeline']
+            date_format = "%Y-%m-%d"
+            
+            if 'start_time' in timeline:
+                try:
+                    start_date = datetime.strptime(timeline['start_time'], date_format).date()
+                    start_timeline = competition.timeline.filter(node_name='start_time').first()
+                    if start_timeline:
+                        start_timeline.date = start_date
+                        start_timeline.save()
+                except (ValueError, TypeError):
+                    return Response({'error': 'start_time 必须是有效的日期，格式为 YYYY-MM-DD'}, 
+                                 status=status.HTTP_400_BAD_REQUEST)
+                    
+            if 'end_time' in timeline:
+                try:
+                    end_date = datetime.strptime(timeline['end_time'], date_format).date()
+                    end_timeline = competition.timeline.filter(node_name='end_time').first()
+                    if end_timeline:
+                        end_timeline.date = end_date
+                        end_timeline.save()
+                except (ValueError, TypeError):
+                    return Response({'error': 'end_time 必须是有效的日期，格式为 YYYY-MM-DD'}, 
+                                 status=status.HTTP_400_BAD_REQUEST)
+        
+        # 保存更新
+        competition.save()
+        
+        # 返回更新后的竞赛信息
+        serializer = CompetitionSerializer(competition)
+        return Response({
+            'message': '竞赛信息更新成功',
+            'data': serializer.data
+        })
+        
     except Competition.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': '找不到指定的竞赛'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': f'更新竞赛时发生错误: {str(e)}'}, 
+                       status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def submit_competition(request):
+    try:
+        data = request.data
 
-    action = request.data.get('action')
-    comment = request.data.get('comment', '')
+        # 必要字段检查
+        required_fields = ['name', 'types', 'levels', 'description', 'website', 'timeline']
+        missing_fields = [field for field in required_fields if field not in data]
+        if missing_fields:
+            return Response({'error': f'缺少字段: {", ".join(missing_fields)}'}, 
+                          status=status.HTTP_400_BAD_REQUEST)
 
-    if action == 'approve':
-        competition.review_status = 'approved'
-    elif action == 'reject':
-        competition.review_status = 'rejected'
-    elif action == 'reset':
-        competition.review_status = 'pending'
-    else:
-        return Response({'error': '无效的操作'}, status=status.HTTP_400_BAD_REQUEST)
+        # 基础数据验证
+        if not isinstance(data['types'], list) or not data['types']:
+            return Response({'error': '竞赛类型必须是非空数组'}, 
+                          status=status.HTTP_400_BAD_REQUEST)
+            
+        if not isinstance(data['levels'], list) or not data['levels']:
+            return Response({'error': '竞赛级别必须是非空数组'}, 
+                          status=status.HTTP_400_BAD_REQUEST)
 
-    competition.review_comment = comment
-    competition.save()
-    return Response({'status': 'success'})
+        # 验证时间节点
+        timeline = data.get('timeline')
+        if not isinstance(timeline, dict) or 'start_time' not in timeline or 'end_time' not in timeline:
+            return Response({'error': '时间节点格式不正确'}, 
+                          status=status.HTTP_400_BAD_REQUEST)
+
+        # 验证并转换日期
+        date_format = "%Y-%m-%d"
+        try:
+            start_date = datetime.strptime(timeline['start_time'], date_format).date()
+            end_date = datetime.strptime(timeline['end_time'], date_format).date()
+        except (ValueError, TypeError):
+            return Response({'error': '日期格式必须为 YYYY-MM-DD'}, 
+                          status=status.HTTP_400_BAD_REQUEST)
+
+        if start_date > end_date:
+            return Response({'error': '开始时间不能晚于结束时间'}, 
+                          status=status.HTTP_400_BAD_REQUEST)
+
+        # 验证URL
+        url_validator = URLValidator()
+        try:
+            url_validator(data['website'])
+        except ValidationError:
+            return Response({'error': '无效的URL格式'}, 
+                          status=status.HTTP_400_BAD_REQUEST)
+
+        # 创建竞赛记录，设置为待审核状态
+        competition = Competition.objects.create(
+            name=data['name'].strip(),
+            types=[t.strip() for t in data['types']],
+            levels=[l.strip() for l in data['levels']],
+            description=data['description'].strip(),
+            website=data['website'].strip(),
+            other_info=data.get('other_info', '').strip(),
+            review_status='pending'  # 设置为待审核状态
+        )
+
+        # 创建时间节点
+        CompetitionTimeline.objects.create(
+            competition=competition,
+            node_name='start_time',
+            date=start_date
+        )
+        CompetitionTimeline.objects.create(
+            competition=competition,
+            node_name='end_time',
+            date=end_date
+        )
+
+        return Response({
+            'message': '竞赛投稿成功，等待管理员审核',
+            'competition_id': competition.id
+        }, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        return Response({'error': f'投稿失败: {str(e)}'}, 
+                       status=status.HTTP_500_INTERNAL_SERVER_ERROR)
