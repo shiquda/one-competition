@@ -39,7 +39,11 @@ class CompetitionTimelineInline(admin.TabularInline):
 
 class CompetitionAdmin(admin.ModelAdmin):
     form = CompetitionAdminForm
-    list_display = ('name', 'display_types', 'display_levels', 'get_start_time', 'get_end_time')
+    list_display = ('name', 'display_types', 'display_levels', 'get_start_time', 'get_end_time', 'review_status')
+    # 添加审核状态过滤器
+    list_filter = ('review_status',)
+    # 允许在列表页直接修改审核状态
+    list_editable = ('review_status',)
     search_fields = ('name',)
     inlines = [CompetitionTimelineInline]
 

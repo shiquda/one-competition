@@ -14,4 +14,8 @@ urlpatterns = [
     path('api/auth/login/', views.login, name='login'),
     path('api/auth/change_password/', views.change_password, name='change_password'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # 审核相关
+    path('api/competitions/', views.get_approved_competitions, name='get_competitions'),
+    path('api/admin/competitions/', views.get_all_competitions_admin, name='get_all_competitions'),
+    path('api/admin/competitions/<int:competition_id>/review/', views.review_competition, name='review_competition'),
 ]

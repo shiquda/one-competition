@@ -19,7 +19,7 @@ from django.core.exceptions import ValidationError
 from datetime import datetime
 from .models import Competition, CompetitionTimeline, User
 from functools import wraps
-
+from rest_framework.permissions import IsAdminUser
 
 def admin_required(view_func):
     """管理员权限验证装饰器"""
@@ -275,3 +275,44 @@ def change_password(request):
     user.set_password(new_password)
     user.save()
     return Response({"message": "密码修改成功"}, status=status.HTTP_200_OK)
+
+# 增加审核相关操作
+@api_view(['GET'])
+def get_approved_competitions(request):
+    """获取所有审核通过的竞赛"""
+    competitions = Competition.objects.filter(review_status='approved')
+    serializer = CompetitionSerializer(competitions, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def get_all_competitions_admin(request):
+    """管理员获取所有竞赛（包括待审核和已拒绝的）"""
+    competitions = Competition.objects.all()
+    serializer = CompetitionSerializer(competitions, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def review_competition(request, competition_id):
+    """审核竞赛"""
+    try:
+        competition = Competition.objects.get(pk=competition_id)
+    except Competition.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    action = request.data.get('action')
+    comment = request.data.get('comment', '')
+
+    if action == 'approve':
+        competition.review_status = 'approved'
+    elif action == 'reject':
+        competition.review_status = 'rejected'
+    elif action == 'reset':
+        competition.review_status = 'pending'
+    else:
+        return Response({'error': '无效的操作'}, status=status.HTTP_400_BAD_REQUEST)
+
+    competition.review_comment = comment
+    competition.save()
+    return Response({'status': 'success'})
