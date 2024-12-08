@@ -20,3 +20,15 @@ pnpm install
 ```bash
 pnpm run dev
 ```
+
+## 后端部署
+
+数据库，按照`settings.py`要求，用户名为`root`, 密码`123456789`，数据库名称`one_competition`
+
+```bash
+cd backend
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+```
+(如果发现migrate有问题，尝试命令`python manage.py migrate competition 0003_user`似乎有奇效)
