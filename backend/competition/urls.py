@@ -15,7 +15,8 @@ urlpatterns = [
     path('api/auth/change_password/', views.change_password, name='change_password'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # 新增管理员接口路由
-     path('api/admin/competitions/', views.get_all_competitions_admin, name='get_all_competitions_admin'),
-     path('api/competition/update/<int:competition_id>/', views.update_competition, name='update_competition'), # 路径参数必填，请求体参数选填
-     path('api/competition/submit/', views.submit_competition, name='submit_competition'),
+    path('api/admin/competitions/', views.get_all_competitions_admin, name='get_all_competitions_admin'),
+    path('api/competition/update/<int:competition_id>/',
+         views.update_competition, name='update_competition'),  # 路径参数必填，请求体参数选填
+    path('api/competition/submit/', views.submit_competition, name='submit_competition'),
 ]
