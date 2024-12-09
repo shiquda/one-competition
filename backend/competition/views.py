@@ -55,7 +55,7 @@ def get_all_competitions(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def get_competition_detail(request, competition_id):
     # 获取并检查竞赛是否审核通过
     competition = get_object_or_404(Competition, pk=competition_id)
@@ -305,7 +305,16 @@ def get_all_competitions_admin(request):
     # 如果是管理员，获取所有竞赛
     competitions = Competition.objects.all()
     serializer = CompetitionSerializer(competitions, many=True)
-    return Response(serializer.data)
+    data = serializer.data  # 这是一个字典列表
+
+    # 为每个竞赛添加时间节点信息
+    for competition in data:
+        timelines = CompetitionTimeline.objects.filter(
+            competition_id=competition['id']
+        ).values('node_name', 'date')
+        competition['timeline'] = list(timelines)
+
+    return Response(data)
 
 
 @api_view(['PUT'])
