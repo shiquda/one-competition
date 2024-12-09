@@ -110,7 +110,7 @@
   // 审批请求
   const approveRequest = async id => {
     try {
-      await api.post(`/admin/competition/update/${id}/`, {
+      await api.put(`/competition/update/${id}/`, {
         review_status: 'approved',
       });
       showNotification({
@@ -132,7 +132,9 @@
   // 拒绝请求
   const rejectRequest = async id => {
     try {
-      await api.post(`/admin/audit-requests/${id}/reject/`);
+      await api.put(`/competition/update/${id}/`, {
+        review_status: 'rejected',
+      });
       showNotification({
         message: '请求已拒绝',
         type: 'success',
