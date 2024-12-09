@@ -229,7 +229,7 @@
     const now = new Date();
     const targetDate = new Date(dateStr);
     const diffTime = targetDate - now;
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     if (diffDays > 0) {
       return `${diffDays}天`;
     } else if (diffDays === 0) {
