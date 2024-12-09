@@ -42,7 +42,9 @@
 
       <div class="mb-6">
         <h2 class="text-2xl font-semibold mb-2">简介</h2>
-        <p class="text-gray-700">{{ competition.description }}</p>
+        <p class="text-gray-700 whitespace-pre-wrap">
+          {{ competition.description }}
+        </p>
       </div>
 
       <div class="mb-6">
@@ -81,7 +83,9 @@
 
       <div>
         <h2 class="text-2xl font-semibold mb-2">其他信息</h2>
-        <p class="text-gray-700">{{ competition.other_info }}</p>
+        <p class="text-gray-700 whitespace-pre-wrap">
+          {{ competition.other_info }}
+        </p>
       </div>
       <div class="mt-6">
         <hr class="border-t border-gray-300 my-6" />
