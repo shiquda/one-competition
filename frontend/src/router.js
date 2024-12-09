@@ -9,7 +9,8 @@ import Register from '@/views/Register.vue';
 import UserCenter from '@/views/UserCenter.vue';
 import Admin from '@/views/Admin.vue';
 import { getAccessToken } from '@/utils/auth';
-import authStore from '@/store/authStore.js';
+import { useAuthStore } from '@/store/authStore.js';
+import showNotification from '@/utils/showNotification';
 
 const routes = [
     {
@@ -20,7 +21,7 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home
-    },   
+    },
     {
         path: '/about',
         name: 'About',
@@ -73,6 +74,7 @@ const router = createRouter({
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore();
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
     const isAdmin = to.matched.some(record => record.meta.isAdmin);
     const token = getAccessToken();
@@ -81,9 +83,7 @@ router.beforeEach((to, from, next) => {
     if (requiresAuth && !token) {
         next('/login');
     } else if (isAdmin) {
-        // 需要进一步验证用户是否为管理员
-        // 这可以通过在前端存储用户类型来实现，例如在登录时存储
-        const userType = localStorage.getItem('userType'); // 假设存储在本地
+        const userType = localStorage.getItem('userType');
         if (userType === 'admin') {
             next();
         } else {

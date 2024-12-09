@@ -66,9 +66,4 @@ api.interceptors.response.use(
     }
 );
 
-// 添加检查登录状态的请求
-api.get('/auth/status/').catch(error => {
-    console.log('状态检查请求失败:', error);
-});
-
 export default api;

@@ -56,7 +56,7 @@
         </div>
       </div>
 
-      <div class="col-span-2">
+      <!-- <div class="col-span-2">
         <label class="block text-sm font-medium text-gray-700">报名日期</label>
         <div class="flex space-x-4 mt-2">
           <div class="relative">
@@ -93,7 +93,7 @@
             </span>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div class="col-span-2">
         <label class="block text-sm font-medium text-gray-700">比赛日期</label>
@@ -192,8 +192,8 @@
     validateTitle();
     validateDescription();
     validateUrl();
-    validateRegisterStart();
-    validateRegisterEnd();
+    // validateRegisterStart();
+    // validateRegisterEnd();
     validateCompetitionStart();
     validateCompetitionEnd();
   });
