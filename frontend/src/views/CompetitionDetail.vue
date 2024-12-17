@@ -128,7 +128,7 @@
   const initializeTwikoo = async () => {
     try {
       await loadScript(
-        'https://cdn.jsdelivr.net/npm/twikoo@1.6.40/dist/twikoo.all.min.js'
+        'https://s4.zstatic.net/npm/twikoo@1.6.40/dist/twikoo.all.min.js'
       );
       if (window.twikoo) {
         window.twikoo.init({
